@@ -1,4 +1,5 @@
 'use client'
+
 import UserRegisterForm from '@/components/owner/UserRegisterForm'
 import { useRouter } from 'next/navigation'
 import { Suspense } from 'react'
