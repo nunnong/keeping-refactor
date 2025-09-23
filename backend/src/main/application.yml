@@ -1,0 +1,149 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/ssafy_fintech_db
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update     # 운영에서는 validate 권장
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      timeout: 2000
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: keeping-payment-group
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.ssafy.keeping.domain.charge.event"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 3
+
+  #  fe:
+  #    base-url: http://localhost:3030
+
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: 8f7d038e1e68f41ef9ddb00e2868fb31
+            client-secret: ***REMOVED***
+            client-name: Kakao
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/auth/kakao/callback"
+            scope:
+              - profile_image
+              - account_email
+            client-authentication-method: client_secret_post
+
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+
+
+logging:
+  level:
+    org.springframework.security: INFO
+    org.springframework.web: INFO
+    com.ssafy.keeping: DEBUG
+
+jwt:
+  secret:  ***REMOVED***
+
+sms:
+  api-key: ***REMOVED***
+  api-secret: ***REMOVED***
+  send-number: "01085549313"
+  base-url: https://api.coolsms.co.kr
+
+finopenapi:
+  base-url: https://finopenapi.ssafy.io
+  api-key: ***REMOVED***
+  time-out-ms:
+    connect: 3000
+    read: 5000
+
+ssafy:
+  finance:
+    api:
+      base-url: https://finopenapi.ssafy.io
+      key: ***REMOVED***
+      timeout-ms:
+        connect: 2000
+        read: 3000
+
+    value:
+      customer-account-type-unique-no: "999-1-8424ac5d3ae74b"
+      owner-account-type-unique-no: "999-1-55bde259c67b45"
+      card-unique-no: "1001-f7f276431d44494"
+      category-id: "CG-9ca85f66311a23d"
+
+    cloud:
+      aws:
+        credentials:
+          access-key: ***REMOVED***
+          secret-key: ***REMOVED***
+        region:
+          static: ap-southeast-2
+        s3:
+          bucket: aws-bucket-keeping-509
+
+    fe:
+      baseUrl: http://localhost:3000
+cloud:
+  aws:
+    credentials:
+      access-key: ***REMOVED***
+      secret-key: ***REMOVED***
+    region:
+      static: ap-southeast-2
+    s3:
+      bucket: aws-bucket-keeping-509
+
+fe:
+  baseUrl: http://localhost:3030
+
+
+fcm:
+  service-account-file: classpath:firebase/keeping-firebase-adminsdk.json
+  project-id: "keeping-6130e"
+
+
+clova:
+  ocr:
+    url: https://vkh8x2briv.apigw.ntruss.com/custom/v1/46265/b599e9a6235079824050281170a3a29256e9881218fc8ad1d9a335ba48967456/infer
+    secret: ***REMOVED***
+    template-ids: 39076
+
+openai:
+  api:
+    key: ***REMOVED***
+    url: https://gms.ssafy.io/gmsapi/api.openai.com/v1/chat/completions
+    model: gpt-4o
+    temperature: 0
+    timeout-ms: 30000
